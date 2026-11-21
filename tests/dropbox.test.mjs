@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import { jobFolder, itemFolder, mediaName, summaryText, upload, dropboxToken, clean } from "../supabase/functions/archive-to-dropbox/dropbox.js";
+const job = { address: "742 Maple Ridge Ln, Anytown, VA 24000", completed_at: "2026-11-20T15:00:00Z", seller: "S", buyer: "B", notes: "" };
+assert.equal(jobFolder("/Estimate Jobs/", job), "/Estimate Jobs/2026-11-20 - 742 Maple Ridge Ln Anytown");
+assert.equal(itemFolder({ code: "V.0 / V.4", area: "Crawlspace · Plumbing" }, 3), "04 V.0 V.4 Crawlspace Plumbing");
+assert.equal(clean('a:b*c?"d<>e|f.'), "a b c d e f");
+assert.equal(mediaName({ kind: "field", id: "abcdef1234", path: "x/y/z.JPG" }, 0), "field-1-abcdef12.jpg");
+const t = summaryText(job, [{ code: "II.3", area: "A", addendum_text: "Fix", materials_cost: 12.5, labor_hours: 1.5 }, { code: "X", area: "B", addendum_text: "Y", materials_cost: null, labor_hours: null }]);
+assert.match(t, /TOTAL MATERIALS: \$12\.50/); assert.match(t, /TOTAL LABOR: 1\.5 hrs/);
+let seen; await upload({ token: "t", path: "/Fix/é.jpg", bytes: new Uint8Array([1]), fetchImpl: async (u, o) => { seen = o; return { ok: true }; } });
+assert.ok(!/[^\x00-\x7f]/.test(seen.headers["Dropbox-API-Arg"])); assert.equal(JSON.parse(seen.headers["Dropbox-API-Arg"]).path, "/Fix/é.jpg");
+await assert.rejects(upload({ token: "t", path: "/a", bytes: new Uint8Array(), fetchImpl: async () => ({ ok: false, status: 409, text: async () => "conflict" }) }), /409/);
+assert.equal(await dropboxToken({ appKey: "k", appSecret: "s", refreshToken: "r", fetchImpl: async (u, o) => { assert.match(String(o.body), /grant_type=refresh_token/); return { ok: true, json: async () => ({ access_token: "AT" }) }; } }), "AT");
+console.log("dropbox tests passed");

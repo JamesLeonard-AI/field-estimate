@@ -1,0 +1,16 @@
+import { buildRequest, parseResponse, extract } from "../supabase/functions/extract-job/core.js";
+import { SAMPLE_JOB } from "../app/sample.js";
+import assert from "node:assert/strict";
+const req = buildRequest({ addendumB64: "QQ==", reportB64: "Qg==", model: "m" });
+assert.equal(req.tool_choice.name, "save_checklist");
+assert.equal(req.messages[0].content.filter(c => c.type === "document").length, 2);
+const fake = { stop_reason: "tool_use", content: [{ type: "tool_use", name: "save_checklist", input: { ...SAMPLE_JOB, items: [...SAMPLE_JOB.items.map(i=>({flag:"",...i})), { code:" X ", area:"", addendum_text:"", inspection_text:"", flag:"" }], warnings: [" w1 ", ""] } }] };
+const out = parseResponse(fake);
+assert.equal(out.items.length, 9); assert.deepEqual(out.warnings, ["w1"]);
+assert.throws(() => parseResponse({ content: [] }));
+assert.throws(() => parseResponse({ content: [{ type: "tool_use", name: "save_checklist", input: { items: [] } }] }));
+const r2 = parseResponse({ ...fake, stop_reason: "max_tokens" }); assert.equal(r2.warnings.length, 2);
+const ok = await extract({ addendumB64:"a", reportB64:"b", apiKey:"k", fetchImpl: async (u, o) => { assert.equal(JSON.parse(o.body).model, "claude-sonnet-5-5"); return { ok: true, json: async () => fake }; } });
+assert.equal(ok.address, SAMPLE_JOB.address);
+await assert.rejects(extract({ addendumB64:"a", reportB64:"b", apiKey:"k", fetchImpl: async () => ({ ok:false, status:401, json: async()=>({error:{message:"bad key"}}) }) }), /401.*bad key/);
+console.log("core tests passed");

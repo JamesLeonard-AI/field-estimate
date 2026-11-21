@@ -1,0 +1,18 @@
+// Sample job (from the 742 Maple Ridge Ln addendum + request list) used by "Load sample job" in demo mode.
+// It is also the expected output used to test the AI extraction step.
+export const SAMPLE_JOB = {
+  address: "742 Maple Ridge Ln, Anytown, VA 24000",
+  buyer: "Jordan & Casey Buyer",
+  seller: "Pat & Sam Seller",
+  items: [
+    { code: "II.3", area: "Crawlspace · Electrical", addendum_text: "All junction boxes and loose wiring fastened and installed appropriately.", inspection_text: "Locations present in the crawlspace where wires and junction boxes are loosely hanging. All electrical components should be secured to the framing for protection." },
+    { code: "III.6", area: "Crawlspace · Insulation", addendum_text: "All the insulation lifted up and reattached (none hanging down) and the areas where damaged replaced.", inspection_text: "Multiple locations present where the batt insulation has fallen from between the floor joists. Condition compromises the thermal envelope and energy efficiency. Multiple locations where the insulation has been damaged from vermin." },
+    { code: "IV.9", area: "Crawlspace · HVAC", addendum_text: "Reattach and repair as necessary the metal enclosure for the supply and return main trunk lines.", inspection_text: "The sealant around the metal enclosure for the supply and return main trunk lines is deteriorated. Condition permits potential pest intrusion into the crawlspace." },
+    { code: "V.0 / V.4", area: "Crawlspace · Plumbing", addendum_text: "Insulate all pipe, support at 4 ft spacing. All pipes to be insulated as well as attached appropriately where possible.", inspection_text: "Plumbing supply piping in the crawlspace is not insulated to prevent potential freezing. Locations present where the PEX supply piping is not properly supported. Industry standards recommend supports at 4 foot spacing.", flag: "Two inspection items combined into one on the addendum." },
+    { code: "VII.6", area: "Interior · Laundry room", addendum_text: "Install GFCI outlet as needed.", inspection_text: "The outlet at the laundry room sink is not GFCI protected." },
+    { code: "IX.8", area: "Exterior · Rear deck", addendum_text: "Install covers on outlets on back deck.", inspection_text: "Receptacles in damp locations must be weather-resistant and have a weatherproof cover. Covers have not been installed on three of the rear deck outlets." },
+    { code: "VIII.3", area: "Attic · Ventilation", addendum_text: "All baffles reattached and replaced as needed.", inspection_text: "Locations present where the baffles are missing and where they are not properly secured to the framing." },
+    { code: "IX.0", area: "Exterior · Front stone", addendum_text: "All the cracks in the mortar repaired with the appropriate mortar patch material to prevent leaks and water damage.", inspection_text: "Multiple cracks noted in the adhered stone veneer in the front. Some of the stones appear to be loose. Recommend sealing all cracks including joints around windows to prevent potential moisture intrusion and damage." },
+    { code: "IX.5", area: "Exterior · Rear deck", addendum_text: "Have a contractor evaluate deck to determine appropriate repairs for the lack of posts and footers. Inspect and repair as needed the four across the back of the deck (house foundation side).", inspection_text: "The beams at both ends of the deck are secured and supported by the ends of the ledger. Ledger boards are not designed for point loads. Recommend the installation of post/footing for safety.", flag: "Evaluate on site — scope depends on what you find." }
+  ]
+};
